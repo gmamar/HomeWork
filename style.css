@@ -1,0 +1,89 @@
+html {
+	box-sizing: border-box;
+}
+
+body {
+	margin: auto;
+	width: 100%;
+	
+}
+
+#all {
+	margin: auto;
+		
+}
+
+#movInfoTitle{
+	text-align: center;
+}
+
+h1 {
+	color: black;
+	margin: 20px auto;
+	width: 95%;
+	font-family: sans-serif;
+	text-align: left
+}
+
+#welcom{
+	text-align: center;
+	
+}
+
+header {
+	width: 100%;
+	background-color: lightskyblue;
+	height: 150px;
+	display: flex;
+}
+
+#mainTitle{
+	margin: auto;
+	margin-bottom: 15px;
+	text-align: center;
+		
+}
+
+#srchVal {
+	height: 20px;
+	width: 500px;
+}
+
+form {
+	height: 30px;
+	margin: auto;
+}
+
+ul {
+	padding: 20px;
+	margin: 0;
+	text-align:center ;
+	list-style-type: none;
+		
+}
+
+li{
+	margin-bottom: 6px;
+}
+
+ul:nth-child(even) {
+	background-color: darkgray;
+}
+
+img {
+	padding: 5px;
+	border: 2px solid black;
+	background-color: white;
+	margin-top:30px
+	
+}
+
+#all {
+	background-color: gainsboro;
+	margin: 0 60px;
+	padding-top: 40px;
+}
+
+li {
+	font-family: sans-serif;
+}
