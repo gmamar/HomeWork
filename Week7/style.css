@@ -1,0 +1,15 @@
+body{
+/*	display: flex;*/
+}
+
+section{
+	flex-direction: column;
+}
+img{
+	width: 20%;
+	
+}
+
+.show{
+	display: none;
+}
