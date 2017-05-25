@@ -1,8 +1,9 @@
 "use strict";
 var avatar = document.getElementById("avatar");
-var rName = document.getElementById("repoName");
+
 var userName = document.getElementById("uName");
 var pRepo = document.getElementById("pRepo");
+var rName = document.getElementById("repoName");
 var sBTN = document.getElementById("entrBTN");
 var pInfo = document.getElementById("allInfo");
 var srcEntry = document.getElementById("srcName");
@@ -12,25 +13,25 @@ var profileInformation = ["id", "gravatar_id", "url", "html_url", "followers_url
 						 "public_gists", "followers", "following", "created_at", "updated_at"];
 
 function gitProfille() {
-
-
+	rName.innerHTML = "";
 	var link = 'https://api.github.com/users/' + srcEntry.value;
 	mainRequest(link);
 }
 
 function repoPage() {
-
 	var repoPageLink = 'https://api.github.com/users/' + srcEntry.value + '/repos';
 	mainRequest(repoPageLink);
 }
 
 function renderRepo(repoinf) {
+	rName.innerHTML = "";
+	var i = 0
 	function repoNameList(index, item) {
-		var lil = document.createElement("li");
-		console.log(repoinf[item].name);
-		lil.innerHTML = repoinf[item].name;
-		console.log(lil);
-		rName.appendChild(lil);
+		var li = document.createElement("li");	
+		li.setAttribute("id", "repotiem_" + i);
+		li.innerHTML = "repo: " + repoinf[item].name;		
+		rName.appendChild(li);
+		i++;
 	}
 	repoinf.forEach(repoNameList);
 
@@ -78,11 +79,17 @@ function renderInfo(Info) {
 	function openGit() {
 		window.open(Info[profileInformation[3]]);
 	}
+	
+	function test(){
+		console.log(event.fromElement);
+		var hover = document.getElementById(event.fromElement);
+		console.log(hover);
+	}
 
 	userName.addEventListener("click", showInfo);
 	avatar.addEventListener("click", openGit);
 	pRepo.addEventListener("click", repoPage);
-
+	rName.addEventListener("mouseover", test);
 }
 
 function repo() {
