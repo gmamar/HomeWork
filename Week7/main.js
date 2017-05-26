@@ -6,6 +6,7 @@ var pRepo = document.getElementById("pRepo");
 var rName = document.getElementById("repoName");
 var sBTN = document.getElementById("entrBTN");
 var pInfo = document.getElementById("allInfo");
+var rItems = document.getElementsByClassName("repoItems");
 var srcEntry = document.getElementById("srcName");
 var profileInformation = ["id", "gravatar_id", "url", "html_url", "followers_url", "following_url", "gists_url",
 				   		"starred_url", "subscriptions_url", "organizations_url", "repos_url", "events_url", "received_events_url",
@@ -26,15 +27,37 @@ function repoPage() {
 function renderRepo(repoinf) {
 	rName.innerHTML = "";
 	var i = 0
+
 	function repoNameList(index, item) {
-		var li = document.createElement("li");	
-		li.setAttribute("id", "repotiem_" + i);
-		li.innerHTML = "repo: " + repoinf[item].name;		
+		var li = document.createElement("li");
+		li.setAttribute("id", "repoItem_" + i);
+		li.setAttribute("class", "repoItems");
+		li.innerHTML = repoinf[item].name;
 		rName.appendChild(li);
 		i++;
 	}
 	repoinf.forEach(repoNameList);
+	rName.addEventListener("mouseover", function (event) {
 
+		var repo = event.target.innerHTML;
+		var p = document.getElementById("Disc")
+		for (var x = 0; x < repoinf.length; x++) {
+			if (repo == repoinf[x].name) {
+				p.innerHTML = "Number of open issues: " + repoinf[x].open_issues
+					+ "<br>" + "Created Date" + repoinf[x].created_at; 
+				
+			}
+			rName.addEventListener("mouseleave", function() {
+      p.innerHTML = "";
+    });
+		}
+
+	});
+
+
+	function test() {
+		alert(event.activeElement.id);
+	}
 }
 
 function mainRequest(targetPage) {
@@ -57,7 +80,7 @@ function mainRequest(targetPage) {
 }
 
 function renderInfo(Info) {
-	console.log(Info);
+	//	console.log(Info);
 	userName.innerHTML = "User name: " + Info.login;;
 	pRepo.innerHTML = "Public repos: " + Info.public_repos;
 	avatar.setAttribute("src", Info.avatar_url); //	load User avatr
@@ -79,22 +102,11 @@ function renderInfo(Info) {
 	function openGit() {
 		window.open(Info[profileInformation[3]]);
 	}
-	
-	function test(){
-		console.log(event.fromElement);
-		var hover = document.getElementById(event.fromElement);
-		console.log(hover);
-	}
 
 	userName.addEventListener("click", showInfo);
 	avatar.addEventListener("click", openGit);
 	pRepo.addEventListener("click", repoPage);
-	rName.addEventListener("mouseover", test);
+	//	rName.addEventListener("mouseover", test);
 }
-
-function repo() {
-
-}
-
 
 sBTN.addEventListener("click", gitProfille);
