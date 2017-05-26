@@ -43,13 +43,12 @@ function renderRepo(repoinf) {
 		var p = document.getElementById("Disc")
 		for (var x = 0; x < repoinf.length; x++) {
 			if (repo == repoinf[x].name) {
-				p.innerHTML = "Number of open issues: " + repoinf[x].open_issues
-					+ "<br>" + "Created Date" + repoinf[x].created_at; 
-				
+				p.innerHTML = "Number of open issues: " + repoinf[x].open_issues +
+					"<br>" + "Created Date" + repoinf[x].created_at;
 			}
-			rName.addEventListener("mouseleave", function() {
-      p.innerHTML = "";
-    });
+			rName.addEventListener("mouseleave", function () {
+				p.innerHTML = "";
+			});
 		}
 
 	});
@@ -64,11 +63,13 @@ function mainRequest(targetPage) {
 	function processRequest() {
 		if (xhr.readyState == 4) {
 			var parsedInfo = JSON.parse(xhr.response);
-			if (parsedInfo.login) {
+			if (parsedInfo.message){
+				alert("Not found, or invaled profile name");
+			} else if (parsedInfo.login) {
 				renderInfo(parsedInfo);
 			} else if (parsedInfo[0].archive_url) {
 				renderRepo(parsedInfo);
-			}
+			}; 
 		}
 	}
 
@@ -80,7 +81,7 @@ function mainRequest(targetPage) {
 }
 
 function renderInfo(Info) {
-	//	console.log(Info);
+	
 	userName.innerHTML = "User name: " + Info.login;;
 	pRepo.innerHTML = "Public repos: " + Info.public_repos;
 	avatar.setAttribute("src", Info.avatar_url); //	load User avatr
@@ -106,7 +107,7 @@ function renderInfo(Info) {
 	userName.addEventListener("click", showInfo);
 	avatar.addEventListener("click", openGit);
 	pRepo.addEventListener("click", repoPage);
-	//	rName.addEventListener("mouseover", test);
+	
 }
 
 sBTN.addEventListener("click", gitProfille);
