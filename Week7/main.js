@@ -3,7 +3,7 @@ var avatar = document.getElementById("avatar");
 var userName = document.getElementById("uName");
 var pRepo = document.getElementById("pRepo");
 var rName = document.getElementById("repoName");
-var sBTN = document.getElementById("entrBTN");
+var srchBTN = document.getElementById("entrBTN");
 var pInfo = document.getElementById("allInfo");
 var rItems = document.getElementsByClassName("repoItems");
 var srcEntry = document.getElementById("srcName");
@@ -12,19 +12,22 @@ var profileInformation = ["id", "gravatar_id", "url", "html_url", "followers_url
 						 "type", "site_admin", "name", "company", "blog", "location", "email", "hireable", "bio", "public_repos",
 						 "public_gists", "followers", "following", "created_at", "updated_at"];
 
-function gitProfille() { // Get information from input text, and call API request function with main repo page.
+// Get information from input text, and call API request function with main repo page.
+function gitProfille() {
 	rName.innerHTML = "";
 	//alert("New requst");
 	var link = 'https://api.github.com/users/' + srcEntry.value;
 	mainRequest(link);
 }
 
-function repoPage() {  // Get information from input text, and call API request function with details repo page.
+// Get information from input text, and call API request function with details repo page.
+function repoPage() {
 	var repoPageLink = 'https://api.github.com/users/' + srcEntry.value + '/repos';
 	mainRequest(repoPageLink);
 }
 
-function renderRepo(repoinf) { // Create unorderd list for repo names, add event listner for repo names details.
+// Create unorderd list for repo names, add event listner for repo names details.
+function renderRepo(repoinf) {
 	rName.innerHTML = "";
 	var i = 0
 
@@ -37,33 +40,39 @@ function renderRepo(repoinf) { // Create unorderd list for repo names, add event
 		i++;
 	}
 	repoinf.forEach(repoNameList);
-	rName.addEventListener("mouseover", function (event) { //triger for mouse over to display every repo name details.
-		var repo = event.target.innerHTML;
-		var p = document.getElementById("Disc")
-		for (var x = 0; x < repoinf.length; x++) {
-			if (repo == repoinf[x].name) {
-				p.innerHTML = "Number of open issues: " + repoinf[x].open_issues +
-					"<br>" + "Created Date" + repoinf[x].created_at;
+
+	//triger for mouse over to display every repo name details.
+	rName.addEventListener("mouseover", function (event) {
+			var repo = event.target.innerHTML;
+			var p = document.getElementById("Disc");
+
+			function issueAndDate(index, item) {
+				if (repo == repoinf[item].name) {
+					p.innerHTML = "Number of open issues: " + repoinf[item].open_issues +
+						"<br>" + "Created Date: " + repoinf[item].created_at;
+				}
 			}
-			rName.addEventListener("mouseleave", function () { // Triger for mouse when leave to remove repo name details.
+			repoinf.forEach(issueAndDate);
+			rName.addEventListener("mouseleave", function () {
 				p.innerHTML = "";
 			});
-		}
+		
 
 	});
 }
 
-function mainRequest(targetPage) { // API request, and decide witch function call depending on output of the request.
+// API request, and decide witch function call depending on output of the request.
+function mainRequest(targetPage) {
 	function processRequest() {
 		if (xhr.readyState == 4) {
 			var parsedInfo = JSON.parse(xhr.response);
-			if (parsedInfo.message){
+			if (parsedInfo.message) {
 				alert("Not found, or invaled profile name");
 			} else if (parsedInfo.login) {
 				renderInfo(parsedInfo);
 			} else if (parsedInfo[0].archive_url) {
 				renderRepo(parsedInfo);
-			}; 
+			};
 		}
 	}
 
@@ -74,15 +83,17 @@ function mainRequest(targetPage) { // API request, and decide witch function cal
 	xhr.onreadystatechange = processRequest;
 }
 
-function renderInfo(Info) { // Display information for user name and repo number.
-	
-	userName.innerHTML = "User name: " + Info.login;;
-	pRepo.innerHTML = "Public repos: " + Info.public_repos;
-	avatar.setAttribute("src", Info.avatar_url); //	load User avatr
-	pInfo.innerHTML = "";
-	addFulllInfo(Info);
+// Display information for user name and repo number.
+function renderInfo(info) {
 
-	function addFulllInfo(userData) { // Create list all profile details, load user information.
+	userName.innerHTML = "User name: " + info.login;;
+	pRepo.innerHTML = "Public repos: " + info.public_repos;
+	avatar.setAttribute("src", info.avatar_url); //	load User avatr
+	pInfo.innerHTML = "";
+	addFulllInfo(info);
+
+	// Create list all profile details, load user information.
+	function addFulllInfo(userData) {
 		for (var i = 0; i < profileInformation.length; i++) {
 			var li = document.createElement("li");
 			li.innerHTML = profileInformation[i] + ": " + userData[profileInformation[i]];
@@ -90,12 +101,14 @@ function renderInfo(Info) { // Display information for user name and repo number
 		}
 	}
 
-	function showInfo() { // switch for disply and hide profile details list.
+	// switch for disply and hide profile details list.
+	function showInfo() {
 		document.getElementById("allInfo").classList.toggle("show");
 	}
 
-	function openGit() { // Open new tab with GitHub profile page when click on profile picture.
-		window.open(Info[profileInformation[3]]);
+	// Open new tab with GitHub profile page when click on profile picture.
+	function openGit() {
+		window.open(info[profileInformation[3]]);
 	}
 
 	userName.addEventListener("click", showInfo); // Listener to show and hide information list.
@@ -103,5 +116,10 @@ function renderInfo(Info) { // Display information for user name and repo number
 	pRepo.addEventListener("click", repoPage); // Listener to display profile name and repo number.	
 }
 
-sBTN.addEventListener("click", gitProfille); // call faunction of the main profile page.
-setInterval(gitProfille, 60000);
+// call faunction of the main profile page.
+srchBTN.addEventListener("click", gitProfille);
+
+//renew request every 1 minute, if input field not empty or contain whitspace.
+if (srcEntry.value !== null && srcEntry.value !== "") {
+	setInterval(gitProfille, 60000);
+}
