@@ -17,13 +17,14 @@ function gitProfille() {
 	rName.innerHTML = "";
 	//alert("New requst");
 	var link = 'https://api.github.com/users/' + srcEntry.value;
-	mainRequest(link);
+	mainRequest(link , 1);
+	
 }
 
 // Get information from input text, and call API request function with details repo page.
 function repoPage() {
 	var repoPageLink = 'https://api.github.com/users/' + srcEntry.value + '/repos';
-	mainRequest(repoPageLink);
+	mainRequest(repoPageLink, 2);
 }
 
 // Create unorderd list for repo names, add event listner for repo names details.
@@ -62,15 +63,15 @@ function renderRepo(repoinf) {
 }
 
 // API request, and decide witch function call depending on output of the request.
-function mainRequest(targetPage) {
+function mainRequest(targetPage, nextFun) {
 	function processRequest() {
 		if (xhr.readyState == 4) {
 			var parsedInfo = JSON.parse(xhr.response);
 			if (parsedInfo.message) {
 				alert("Not found, or invaled profile name");
-			} else if (parsedInfo.login) {
+			} else if (nextFun === 1) {
 				renderInfo(parsedInfo);
-			} else if (parsedInfo[0].archive_url) {
+			} else if (nextFun === 2) {
 				renderRepo(parsedInfo);
 			};
 		}
