@@ -62,7 +62,7 @@ function renderRepo(repoinf) {
 	});
 }
 
-// API request, and decide witch function call depending on output of the request.
+// API request, and decide witch function call depending on output of the request updated.
 function mainRequest(targetPage, nextFun) {
 	function processRequest() {
 		if (xhr.readyState == 4) {
