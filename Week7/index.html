@@ -8,36 +8,43 @@
 </head>
 
 <body>
-	<h1>GitHub Profiles</h1>
-	<header>
-		<form>
-			<label>Profile</label>
-			<input type="text" placeholder="Enter profile name" id="srcName">
-			<br>
-			<label>Looking for</label>
-			<input type="text" placeholder="Enter filter type" id="filter">
-			<br>
 
+	<header>
+		<h1>GitHub Profiles</h1>
+		<form>
+			<label>Profile: </label>
+			<input type="text" placeholder="Enter profile name" id="srcName">
+			<label>Looking for: </label>
+			<input type="text" placeholder="Enter filter type" id="filter">
 			<button id="entrBTN" type="button">Search Repos</button>
 		</form>
-
 	</header>
-	<section>
-		<img id="avatar">
-		<p id="uName"></p>
-		<p id="pRepo"></p>
-		<ul id="allInfo" class="show"></ul>
-		<section>
-			<ol id="repoName" class="repoMenu"></ol>
+
+
+	<section id="main">
+		<section id="mainInfo">
+			<p id="uName"></p>
+			<p id="pRepo"></p>
+			<section>
+				<ol id="repoName" class="repoMenu"></ol>
+			</section>
+			<aside id="repoData">
+				<p id="Disc"></p>
+			</aside>
 		</section>
 
+		<section id="imgPlace">
+			<img id="avatar">
+		</section>
+
+		<section id="moreInfo">
+		<h2 id="allInfoTitle" class="show">All information</h2>
+			<ul id="allInfo" class="show"></ul>
+		</section>
+
+
+
 	</section>
-	<section>
-		<ol id="repoName" class="repoMenu"></ol>
-	</section>
-	<aside id="repoData">
-		<p id="Disc"></p>
-	</aside>
 	<script src="main.js"></script>
 </body>
 

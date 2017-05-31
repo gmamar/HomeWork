@@ -62,7 +62,7 @@ function renderRepo(repoinf) {
 	});
 }
 
-// API request, and decide witch function call depending on output of the request updated.
+// API request, and decide witch function call depending on output of the request updatedgit.
 function mainRequest(targetPage, nextFun) {
 	function processRequest() {
 		if (xhr.readyState == 4) {
@@ -105,6 +105,7 @@ function renderInfo(info) {
 	// switch for disply and hide profile details list.
 	function showInfo() {
 		document.getElementById("allInfo").classList.toggle("show");
+		document.getElementById("allInfoTitle").classList.toggle("show")
 	}
 
 	// Open new tab with GitHub profile page when click on profile picture.
