@@ -7,6 +7,7 @@ var srchBTN = document.getElementById("entrBTN");
 var pInfo = document.getElementById("allInfo");
 var rItems = document.getElementsByClassName("repoItems");
 var srcEntry = document.getElementById("srcName");
+var srcFilter = document.getElementById("filter");
 var followerName = document.getElementById("folowerName");
 var followersList = document.getElementById("followPic");
 var followersData;
@@ -42,11 +43,30 @@ function renderRepo(repoinf) {
 		var li = document.createElement("li");
 		li.setAttribute("id", "repoItem_" + i);
 		li.setAttribute("class", "repoItems");
+		
 		li.innerHTML = repoinf[item].name;
 		rName.appendChild(li);
 		i++;
 	}
-	repoinf.forEach(repoNameList);
+	
+	var srcVal = srcFilter.value;
+	console.log(srcVal);
+	
+	//filter the output repo list names.
+	var filterRepoinf = repoinf.filter(function(Val){
+		console.log(Val);
+		if (!srcVal){
+			return true;
+		}
+		if(srcVal == Val.language){
+			return true;
+		}else if (srcVal !== Val.language){
+			return false;
+		}
+	});
+	
+	console.log(filterRepoinf);
+	filterRepoinf.forEach(repoNameList);
 
 	//triger for mouse over to display every repo name details.
 	rName.addEventListener("mouseover", function (event) {
@@ -116,10 +136,8 @@ function followersInfo(followers) {
 		followersList.appendChild(li);
 	}
 	followers.forEach(showInfo);
-
+	document.getElementById("followTitle").innerHTML="Followers:"
 	followPic.addEventListener("mouseover", function (event) {
-		console.log(event.target.id);
-		console.log(event);
 		if (event.target.id !== null) {
 			followerName.innerHTML = event.target.id ;
 		}
