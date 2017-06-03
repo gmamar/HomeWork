@@ -7,6 +7,9 @@ var srchBTN = document.getElementById("entrBTN");
 var pInfo = document.getElementById("allInfo");
 var rItems = document.getElementsByClassName("repoItems");
 var srcEntry = document.getElementById("srcName");
+var followerName = document.getElementById("folowerName");
+var followersList = document.getElementById("followPic");
+var followersData;
 var profileInformation = ["id", "gravatar_id", "url", "html_url", "followers_url", "following_url", "gists_url",
 				   		"starred_url", "subscriptions_url", "organizations_url", "repos_url", "events_url", "received_events_url",
 						 "type", "site_admin", "name", "company", "blog", "location", "email", "hireable", "bio", "public_repos",
@@ -17,14 +20,17 @@ function gitProfille() {
 	rName.innerHTML = "";
 	//alert("New requst");
 	var link = 'https://api.github.com/users/' + srcEntry.value;
-	mainRequest(link , 1);
-	
+	mainRequest(link, 1);
+
 }
 
 // Get information from input text, and call API request function with details repo page.
 function repoPage() {
 	var repoPageLink = 'https://api.github.com/users/' + srcEntry.value + '/repos';
 	mainRequest(repoPageLink, 2);
+	var followers = "https://api.github.com/users/" + srcEntry.value + "/followers"
+	mainRequest(followers, 3);
+
 }
 
 // Create unorderd list for repo names, add event listner for repo names details.
@@ -44,20 +50,20 @@ function renderRepo(repoinf) {
 
 	//triger for mouse over to display every repo name details.
 	rName.addEventListener("mouseover", function (event) {
-			var repo = event.target.innerHTML;
-			var p = document.getElementById("Disc");
+		var repo = event.target.innerHTML;
+		var p = document.getElementById("Disc");
 
-			function issueAndDate(index, item) {
-				if (repo == repoinf[item].name) {
-					p.innerHTML = "Number of open issues: " + repoinf[item].open_issues +
-						"<br>" + "Created Date: " + repoinf[item].created_at;
-				}
+		function issueAndDate(index, item) {
+			if (repo == repoinf[item].name) {
+				p.innerHTML = "Number of open issues: " + repoinf[item].open_issues +
+					"<br>" + "Created Date: " + repoinf[item].created_at;
 			}
-			repoinf.forEach(issueAndDate);
-			rName.addEventListener("mouseleave", function () {
-				p.innerHTML = "";
-			});
-		
+		}
+		repoinf.forEach(issueAndDate);
+		rName.addEventListener("mouseleave", function () {
+			p.innerHTML = "";
+		});
+
 
 	});
 }
@@ -73,7 +79,19 @@ function mainRequest(targetPage, nextFun) {
 				renderInfo(parsedInfo);
 			} else if (nextFun === 2) {
 				renderRepo(parsedInfo);
-			};
+			} else if (nextFun === 3) {
+				followersData = parsedInfo.map(
+					function (repo) {
+
+						return {
+							name: repo.login,
+							html_url: repo.html_url,
+							avatar: repo.avatar_url
+						}
+					}
+				)
+				followersInfo(followersData);
+			}
 		}
 	}
 
@@ -84,12 +102,45 @@ function mainRequest(targetPage, nextFun) {
 	xhr.onreadystatechange = processRequest;
 }
 
+//this function display followers informations.
+function followersInfo(followers) {
+
+	followersList.innerHTML = "";
+
+	function showInfo(index, item) {
+		var pic = document.createElement("img");
+		pic.setAttribute("src", followers[item].avatar)
+		pic.setAttribute("id", followers[item].name);
+		var li = document.createElement("li");
+		li.appendChild(pic);
+		followersList.appendChild(li);
+	}
+	followers.forEach(showInfo);
+
+	followPic.addEventListener("mouseover", function (event) {
+		console.log(event.target.id);
+		console.log(event);
+		if (event.target.id !== null) {
+			followerName.innerHTML = event.target.id ;
+		}
+	});
+	
+	followPic.addEventListener("mouseleave", function(){
+		followerName.innerHTML= "";
+	})
+	//	function showFoName
+
+
+
+
+}
+
 // Display information for user name and repo number.
 function renderInfo(info) {
 
 	userName.innerHTML = "User name: " + info.login;;
 	pRepo.innerHTML = "Public repos: " + info.public_repos;
-	avatar.setAttribute("src", info.avatar_url); //	load User avatr
+	avatar.setAttribute("src", info.avatar_url); //	load User avatar
 	pInfo.innerHTML = "";
 	addFulllInfo(info);
 
