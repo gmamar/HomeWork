@@ -18,10 +18,15 @@ var profileInformation = ["id", "gravatar_id", "url", "html_url", "followers_url
 
 // Get information from input text, and call API request function with main repo page.
 function gitProfille() {
+	followersList.innerHTML = "";
 	rName.innerHTML = "";
 	//alert("New requst");
 	var link = 'https://api.github.com/users/' + srcEntry.value;
-	mainRequest(link, 1);
+//		mainRequest(link, 1);
+	var promise = mainRequest(link, 1);
+	promise.then(function (test) {
+		console.log(test);
+	}).catch(Error);
 
 }
 
@@ -43,28 +48,28 @@ function renderRepo(repoinf) {
 		var li = document.createElement("li");
 		li.setAttribute("id", "repoItem_" + i);
 		li.setAttribute("class", "repoItems");
-		
+
 		li.innerHTML = repoinf[item].name;
 		rName.appendChild(li);
 		i++;
 	}
-	
+
 	var srcVal = srcFilter.value;
 	console.log(srcVal);
-	
+
 	//filter the output repo list names.
-	var filterRepoinf = repoinf.filter(function(Val){
+	var filterRepoinf = repoinf.filter(function (Val) {
 		console.log(Val);
-		if (!srcVal){
+		if (!srcVal) {
 			return true;
 		}
-		if(srcVal == Val.language){
+		if (srcVal == Val.language) {
 			return true;
-		}else if (srcVal !== Val.language){
+		} else if (srcVal !== Val.language) {
 			return false;
 		}
 	});
-	
+
 	console.log(filterRepoinf);
 	filterRepoinf.forEach(repoNameList);
 
@@ -90,36 +95,58 @@ function renderRepo(repoinf) {
 
 // API request, and decide witch function call depending on output of the request updatedgit.
 function mainRequest(targetPage, nextFun) {
-	function processRequest() {
-		if (xhr.readyState == 4) {
-			var parsedInfo = JSON.parse(xhr.response);
-			if (parsedInfo.message) {
-				alert("Not found, or invaled profile name");
-			} else if (nextFun === 1) {
-				renderInfo(parsedInfo);
-			} else if (nextFun === 2) {
-				renderRepo(parsedInfo);
-			} else if (nextFun === 3) {
-				followersData = parsedInfo.map(
-					function (repo) {
 
-						return {
-							name: repo.login,
-							html_url: repo.html_url,
-							avatar: repo.avatar_url
-						}
-					}
-				)
-				followersInfo(followersData);
+	return new Promise(function (resolve, reject) {
+		var xhr = new XMLHttpRequest();
+		
+		console.log(targetPage);
+		xhr.open("GET", targetPage, true);
+		console.log(xhr);
+		xhr.onload = function () {
+				if (xhr.status == 200) {
+					alert(xhr.status)
+					resolve(JSON.parse(xhr.response));
+				} else {
+					reject(xhr.statusText);
+				}
 			}
-		}
-	}
+		xhr.onerror = function (){
+			reject(xhr.statusText);
+		};
+		xhr.send();
+	});
 
-	var requestURL = targetPage;
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', requestURL, true);
-	xhr.send();
-	xhr.onreadystatechange = processRequest;
+//		function processRequest() {
+//			if (xhr.readyState == 4) {
+//				var parsedInfo = JSON.parse(xhr.response);
+//				if (parsedInfo.message) {
+//					alert("Not found, or invaled profile name");
+//				} else if (nextFun === 1) {
+//					renderInfo(parsedInfo);
+//				} else if (nextFun === 2) {
+//					renderRepo(parsedInfo);
+//				} else if (nextFun === 3) {
+//					followersData = parsedInfo.map(
+//						function (repo) {
+//	
+//							return {
+//								name: repo.login,
+//								html_url: repo.html_url,
+//								avatar: repo.avatar_url
+//							}
+//						}
+//					)
+//					followersInfo(followersData);
+//				}
+//			}
+//		}
+//	
+//		
+//		var xhr = new XMLHttpRequest();
+//		xhr.open('GET', targetPage, true);
+//	console.log(xhr);
+//		xhr.send();
+//		xhr.onreadystatechange = processRequest;
 }
 
 //this function display followers informations.
@@ -136,15 +163,15 @@ function followersInfo(followers) {
 		followersList.appendChild(li);
 	}
 	followers.forEach(showInfo);
-	document.getElementById("followTitle").innerHTML="Followers:"
+	document.getElementById("followTitle").innerHTML = "Followers:"
 	followPic.addEventListener("mouseover", function (event) {
 		if (event.target.id !== null) {
-			followerName.innerHTML = event.target.id ;
+			followerName.innerHTML = event.target.id;
 		}
 	});
-	
-	followPic.addEventListener("mouseleave", function(){
-		followerName.innerHTML= "";
+
+	followPic.addEventListener("mouseleave", function () {
+		followerName.innerHTML = "";
 	})
 	//	function showFoName
 
@@ -191,6 +218,6 @@ function renderInfo(info) {
 srchBTN.addEventListener("click", gitProfille);
 
 //renew request every 1 minute, if input field not empty or contain whitspace.
-if (srcEntry.value !== null && srcEntry.value !== "") {
-	setInterval(gitProfille, 60000);
-}
+//if (srcEntry.value !== null && srcEntry.value !== "") {
+//	setInterval(gitProfille, 60000);
+//}
